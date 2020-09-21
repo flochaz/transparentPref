@@ -1,11 +1,7 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import ProTip from '../src/ProTip';
-import Link from '../src/Link';
 import Copyright from '../src/Copyright';
-import Form from '@rjsf/material-ui';
 import { withTheme } from '@rjsf/core';
 import { Theme as MaterialUITheme } from '@rjsf/material-ui';
 
@@ -17,7 +13,7 @@ const schema = {
   properties: {
     title: {type: "string", title: "Titre", default: ""},
     description: {type: "string", title: "Description de l'arrêté", default: ""},
-    link: {type: "string", title: "Lien vers le document officiel", default: ""},
+    link: {type: "string", title: "Lien vers le document officiel", format: "uri"},
     category: {
       "type": "array",
     "title": "Catégorie couverte par l'arrêté",
@@ -50,18 +46,22 @@ const schema = {
       },
       "uniqueItems": true
     },
-    times: {
+    applicableDays: {
       "type": "array",
-      "title": "Plages horaires d'application",
-      "items": [
-        "Tous les jours",
-        "Week end",
-        "Semaine"
-      ],
-      "additionalItems": {
-        "title": "Autre periode",
-        "type": "string"
-      }
+      "title": "Jours d'applications",
+      "items": {
+        "type": "string",
+        "enum": [
+          "TOUS",
+          "Lundi",
+          "Mardi",
+          "Mercredi",
+          "Jeudi",
+          "Vendredi",
+          "Samedi",
+          "Dimanche"
+        ]
+      },
     },
     duration: {
       "title": "Durée",
@@ -84,7 +84,7 @@ const schema = {
 const uiSchema = {
   "zones": {
     "ui:widget": "checkboxes"
-  }
+  },
 }
 
 const log = (type) => console.log.bind(console, type);
