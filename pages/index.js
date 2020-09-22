@@ -1,91 +1,122 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import Copyright from '../src/Copyright';
-import { withTheme } from '@rjsf/core';
-import { Theme as MaterialUITheme } from '@rjsf/material-ui';
+import React from "react";
+import Container from "@material-ui/core/Container";
+import Box from "@material-ui/core/Box";
+import Copyright from "../src/Copyright";
+import { withTheme } from "@rjsf/core";
+import { Theme as MaterialUITheme } from "@rjsf/material-ui";
+import TimeWidget from "../src/TimeWidget";
 
+const widgets = { time: TimeWidget };
 
 const schema = {
   title: "Nouvel arrêté préfectoral",
   type: "object",
-  required: ["title", "description", "link", "zipCode", "zones", "times", "duration"],
+  required: [
+    "title",
+    "description",
+    "link",
+    "zipCode",
+    "zones",
+    "times",
+    "duration",
+  ],
   properties: {
-    title: {type: "string", title: "Titre", default: ""},
-    description: {type: "string", title: "Description de l'arrêté", default: ""},
-    link: {type: "string", title: "Lien vers le document officiel", format: "uri"},
-    category: {
-      "type": "array",
-    "title": "Catégorie couverte par l'arrêté",
-    "items": {
-      "type": "string",
-      "enum": [
-        "Santé",
-        "Sécurité",
-        "Catastrophe naturelle",
-        "autre"
-      ]
+    title: { type: "string", title: "Titre", default: "" },
+    description: {
+      type: "string",
+      title: "Description de l'arrêté",
+      default: "",
     },
-    "uniqueItems": true
-  },
-    zipCode: {type: "string", title: "Code postal", default: ""},
-    zones: {
-      "type": "array",
-      "title": "Zone d'application",
-      "items": {
-        "type": "string",
-        "enum": [
-          "Centre ville",
-          "transport en commun",
-          "lieux public",
-          "lieux privé",
-          "exterieurs",
-          "intérieur",
-          "autre"
-        ]
-      },
-      "uniqueItems": true
+    link: {
+      type: "string",
+      title: "Lien vers le document officiel",
+      format: "uri",
     },
-    applicableDays: {
-      "type": "array",
-      "title": "Jours d'applications",
-      "items": {
-        "type": "string",
-        "enum": [
-          "TOUS",
-          "Lundi",
-          "Mardi",
-          "Mercredi",
-          "Jeudi",
-          "Vendredi",
-          "Samedi",
-          "Dimanche"
-        ]
-      },
-    },
-    duration: {
-      "title": "Durée",
-      "description": "Sélectionnez la date de début et de fin d'application",
-      "type": "object",
-      "properties": {
-        "start": {
-          "type": "string",
-          "format": "date-time"
+    mainCategory: {
+      type: "string",
+      title: "Catégorie couverte par l'arrêté",
+      oneOf: [
+        {
+          title: "Port du masque",
+          const: "Port du masque",
         },
-        "end": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    }
-  }
+        {
+          title: "Événement culturel et sportif",
+          const: "Événement culturel et sportif",
+        },
+        {
+          title: "Lieux d accueil du public",
+          const: "Lieux d accueil du public",
+        },
+        {
+          title: "Autre",
+          const: "Autre",
+        },
+      ],
+    },
+    zipCode: { type: "number", title: "Code postal", default: "" },
+    // zones: {
+    //   "type": "array",
+    //   "title": "Zone d'application",
+    //   "items": {
+    //     "type": "string",
+    //     "enum": [
+    //       "Centre ville",
+    //       "transport en commun",
+    //       "lieux public",
+    //       "lieux privé",
+    //       "exterieurs",
+    //       "intérieur",
+    //       "autre"
+    //     ]
+    //   },
+    //   "uniqueItems": true
+    // },
+    // hours: {
+    //   "type": "object",
+    //   "title": "Heures d'applications",
+    //   properties: {
+    //     "start": {
+    //       "type": "string",
+    //       "title": "Debut",
+    //       "format": "time"
+    //     },
+    //     "end": {
+    //       "type": "string",
+    //       "title": "Fin",
+    //       "format": "time"
+    //     }
+    //     }
+    // },
+    duration: {
+      title: "Durée",
+      description:
+        "Sélectionnez la date de début et de fin d'application de l'arrêté",
+      type: "object",
+      properties: {
+        start: {
+          type: "string",
+          title: "Debut",
+          format: "date-time",
+        },
+        end: {
+          type: "string",
+          title: "Fin",
+          format: "date-time",
+        },
+      },
+    },
+  },
 };
 
 const uiSchema = {
-  "zones": {
-    "ui:widget": "checkboxes"
+  category: {
+    mainCategory: { "ui:widget": "radio" },
   },
-}
+  hours: {
+    "ui:widget": "time",
+  },
+};
 
 const log = (type) => console.log.bind(console, type);
 
@@ -96,11 +127,12 @@ export default function Index() {
     <Container maxWidth="sm">
       <Box my={4}>
         <Form
-        schema={schema}
-        uiSchema={uiSchema}
-        onChange={log("changed")}
-        onSubmit={log("submitted")}
-        onError={log("errors")}
+          widgets={widgets}
+          schema={schema}
+          uiSchema={uiSchema}
+          onChange={log("changed")}
+          onSubmit={log("submitted")}
+          onError={log("errors")}
         />
         <Copyright />
       </Box>
