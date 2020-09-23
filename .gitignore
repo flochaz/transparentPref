@@ -16,7 +16,7 @@ yarn-error.log*
 
 # Next.js
 /.next
-
+/out
 #amplify
 amplify/\#current-cloud-backend
 amplify/.config/local-*
