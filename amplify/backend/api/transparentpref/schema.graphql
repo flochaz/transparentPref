@@ -1,0 +1,15 @@
+type arrete @model {
+  id: ID!
+  title: String!
+  description: String!
+  link: String!
+  mainCategory: String!
+  zipCode: String!
+  period: Period!
+}
+
+type Period {
+  start: AWSDateTime!
+  end: AWSDateTime
+}
+
