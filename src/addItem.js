@@ -106,18 +106,20 @@ class AddItem extends Component {
     this.setState({ open: false });
   };
 
-  handleSubmit = ({ formData }, e) => {
+  handleSubmit = async ({ formData }, e) => {
     this.setState({ open: false });
+    
+    console.log("Item Details : " + JSON.stringify(formData))
+    let result = await API.graphql(graphqlOperation(this.props.currentItem?mutations.updateArrete:mutations.createArrete, {input: formData}));
     if(this.props.currentItem){
         formData['id'] = this.props.currentItem.id
         delete formData.createdAt;
         delete formData.updatedAt;
         this.props.updateItem(formData)
 
+    }else {
+        this.props.addItem(result.data.createArrete);
     }
-    console.log("Item Details : " + JSON.stringify(formData))
-    API.graphql(graphqlOperation(this.props.currentItem?mutations.updateArrete:mutations.createArrete, {input: formData}));
-    // window.location.reload()
   }
 
 

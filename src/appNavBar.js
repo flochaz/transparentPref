@@ -30,7 +30,7 @@ class AppNavBar extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Arrêtés
             </Typography>
-              <AddItem />
+              <AddItem addItem={this.props.addItem}/>
           </Toolbar>
         </AppBar>
       </div>
