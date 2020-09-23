@@ -28,7 +28,7 @@ class AppNavBar extends Component {
         <AppBar position="static" color="default">
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Items
+              Arrêtés
             </Typography>
               <AddItem />
           </Toolbar>
